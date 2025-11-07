@@ -61,30 +61,57 @@ vim.lsp.enable("pyright")
 -- 5. Carga de plugins (al final)
 require("lazy").setup({
   -- Tema Kanagawa
+--    {
+--    "rebelot/kanagawa.nvim",
+--    priority = 1000,
+--    config = function()
+--      require("kanagawa").setup({
+--        transparent = true,
+--        colors = {
+--          theme = {
+--           wave = {
+--              ui = {
+--                bg = "none",
+--                bg_gutter = "none",
+--              },
+--            },
+--          },
+--        },
+--      })
+--      vim.cmd.colorscheme("kanagawa-wave")
+--      
+--      -- Ajustes adicionales para mejorar la legibilidad
+--      vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+--      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+--      vim.api.nvim_set_hl(0, "LineNr", { fg = "#DCD7BA", bg = "none" })
+--    end,
+--  },
+--
   {
-    "rebelot/kanagawa.nvim",
-    priority = 1000,
-    config = function()
-      require("kanagawa").setup({
-        transparent = true,
-        colors = {
-          theme = {
-            wave = {
-              ui = {
-                bg = "none",
-                bg_gutter = "none",
+  "folke/tokyonight.nvim",
+  lazy = false,
+  priority = 1000,
+  config = function()
+      require("tokyonight").setup({
+          transparent = true,
+          colors = {
+              theme = {
+                  moon = {
+                      ui = {
+                          bg = "none",
+                          bg_gutter = "none",
+                      },
+                  },
               },
-            },
           },
-        },
       })
-      vim.cmd.colorscheme("kanagawa-wave")
-      
-      -- Ajustes adicionales para mejorar la legibilidad
-      vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-      vim.api.nvim_set_hl(0, "LineNr", { fg = "#DCD7BA", bg = "none" })
-    end,
+    vim.cmd.colorscheme("tokyonight-moon")
+
+    vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+    vim.api.nvim_set_hl(0, "LineNr", { fg = "#5C97f1", bg = "none" })
+
+  end,
   },
   -- Configurador de LSP  
   { "neovim/nvim-lspconfig" },  

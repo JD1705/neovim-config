@@ -110,7 +110,11 @@ require("lazy").setup({
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
     vim.api.nvim_set_hl(0, "LineNr", { fg = "#5C97f1", bg = "none" })
-
+    
+    vim.cmd([[
+        highlight NvimTreeNormal guibg=NONE
+        highlight NvimTreeEndOfBuffer guibg=NONE
+        ]])
   end,
   },
   -- Configurador de LSP  

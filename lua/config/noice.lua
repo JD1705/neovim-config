@@ -47,7 +47,53 @@ return {
             -- lua = false, -- to disable a format, set to `false`
             },
         },
-
+        
+  -- default options for require('noice').redirect
+  -- see the section on Command Redirection
+  ---@type NoiceRouteConfig
+    redirect = {
+        view = "popup",
+        filter = { event = "msg_show" },
+    },
+  -- You can add any custom commands below that will be available with `:Noice command`
+  ---@type table<string, NoiceCommand>
+    commands = {
+        history = {
+      -- options for the message history that you get with `:Noice`
+        view = "split",
+        opts = { enter = true, format = "details" },
+        filter = {
+            any = {
+                { event = "notify" },
+                { error = true },
+                { warning = true },
+                { event = "msg_show", kind = { "" } },
+                { event = "lsp", kind = "message" },
+                },
+            },
+        },
+        last = {
+      view = "popup",
+      opts = { enter = true, format = "details" },
+      filter = {
+        any = {
+          { event = "notify" },
+          { error = true },
+          { warning = true },
+          { event = "msg_show", kind = { "" } },
+          { event = "lsp", kind = "message" },
+        },
+      },
+      filter_opts = { count = 1 },},
+  notify = {
+    -- Noice can be used as `vim.notify` so you can route any notification like other messages
+    -- Notification messages have their level and other properties set.
+    -- event is always "notify" and kind can be any log level as a string
+    -- The default routes will forward notifications to nvim-notify
+    -- Benefit of using Noice for this is the routing and consistent history view
+    enabled = true,
+    view = "notify",
+  },
         -- Configuración de messages que preguntas
         messages = {
           -- NOTE: If you enable messages, then the cmdline is enabled automatically.
@@ -66,7 +112,35 @@ return {
             ---@type NoicePopupmenuItemKind|false
             -- Icons for completion item kinds (see defaults at noice.config.icons.kinds)
             kind_icons = true, -- set to `false` to disable icons
+            },
         },
+        routes = {
+    -- ... otras rutas que tengas
+
+    -- Mostrar mensajes de comandos de shell ( :! )
+    {
+      filter = {
+        event = "msg_show",
+        kind = "return",  -- Esto captura el mensaje de retorno del comando de shell
+      },
+      view = "messages",  -- Puedes cambiarlo a "notify" si prefieres un popup, pero para salidas largas "messages" es mejor
+    },
+    -- También capturar el mensaje de "Press ENTER or type command to continue"
+    {
+      filter = {
+        event = "msg_show",
+        find = "Press ENTER",
+      },
+      view = "messages",
+    },
+    {
+        filter = {
+            event = "msg_show",
+            kind = "shell_out",
+        },
+        view = "messages"
+    }
+  },
       })
     end,
   }

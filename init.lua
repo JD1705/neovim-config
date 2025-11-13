@@ -44,6 +44,10 @@ keymap("n", "<Leader>E", ":NvimTreeFocus<CR>", { desc = "Focus file explorer" })
 -- shortcut to activate/toggle Trouble with space+t
 keymap("n", "<Leader>t", ":Trouble<CR>")
 
+-- toggle commas and semmicolons
+keymap('n','<leader>,', ':CommaToggle<CR>')
+keymap('n','<leader>;', ':SemiToggle<CR>')
+
 -- hop keymaps
 vim.api.nvim_set_keymap("n", "s", ":HopWord<CR>", { silent = true })
 vim.api.nvim_set_keymap("n", "S", ":HopLine<CR>", { silent = true })
@@ -110,15 +114,49 @@ require("lazy").setup({
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
     vim.api.nvim_set_hl(0, "LineNr", { fg = "#5C97f1", bg = "none" })
-    
+ 
+-- Aplicar transparencia globalmente
     vim.cmd([[
+        " Fondos transparentes generales
+        highlight Normal guibg=NONE
+        highlight NormalNC guibg=NONE
+        highlight NormalFloat guibg=NONE
+  
+        " Nvim-tree
         highlight NvimTreeNormal guibg=NONE
+        highlight NvimTreeNormalNC guibg=NONE
         highlight NvimTreeEndOfBuffer guibg=NONE
+
+        " Barbar - Tabs individuales
+        highlight BufferCurrent guibg=NONE
+        highlight BufferVisible guibg=NONE
+        highlight BufferInactive guibg=NONE
+        highlight BufferVisibleMod guibg=NONE
+        highlight BufferCurrentMod guibg=NONE
+        highlight BufferInactiveMod guibg=NONE
+        highlight BufferTabpageFill guibg=NONE
+        highlight BufferSeparator guibg=NONE
+        highlight BufferInactiveSign guibg=NONE
+
+        " Telescope - Fondos transparentes
+        highlight TelescopeNormal guibg=NONE
+        highlight TelescopeBorder guibg=NONE
+        highlight TelescopePromptNormal guibg=NONE
+        highlight TelescopePromptBorder guibg=NONE
+        highlight TelescopePreviewNormal guibg=NONE
+        highlight TelescopePreviewBorder guibg=NONE
+        highlight TelescopeResultsNormal guibg=NONE
+        highlight TelescopeResultsBorder guibg=NONE
+        highlight TelescopeTitle guibg=NONE
+
+        " Línea de separación
+        highlight WinSeparator guibg=NONE
         ]])
+
   end,
   },
   -- Configurador de LSP  
-  { "neovim/nvim-lspconfig" },  
+  { "neovim/nvim-lspconfig" },
   -- Autocompletado
   {
   -- Autocompletado principal
@@ -150,14 +188,14 @@ require("lazy").setup({
   run = ":TSUpdate",
   config = function()
     require("nvim-treesitter.configs").setup({
-      ensure_installed = { "python" },
+      ensure_installed = { "python", "bash", "regex", "vim" },
       highlight = { enable = true },
     })
   end,
   },
   -- Telescope
   {
-    'nvim-telescope/telescope.nvim', 
+    'nvim-telescope/telescope.nvim',
     tag = '0.1.8',
     dependencies = { 'nvim-lua/plenary.nvim' },
   },
@@ -248,6 +286,8 @@ require("lazy").setup({
   {import = "config.luarocks"},
   {import = "config.mason"},
   {import = "config.mason-lsp"},
+  {import = "config.comment"},
+  {import = "config.comma"},
 },
 {
     rocks = {

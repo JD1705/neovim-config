@@ -51,7 +51,7 @@ keymap('n','<leader>;', ':SemiToggle<CR>')
 -- hop keymaps
 vim.api.nvim_set_keymap("n", "s", ":HopWord<CR>", { silent = true })
 vim.api.nvim_set_keymap("n", "S", ":HopLine<CR>", { silent = true })
-vim.api.nvim_set_keymap("n", "f", ":HopChar1<CR>", { silent = true })
+-- vim.api.nvim_set_keymap("n", "f", ":HopChar1<CR>", { silent = true })
 
 -- A set of options for better completion experience. See `:h completeopt`
 vim.opt.completeopt = { "menuone", "noselect", "noinsert" }
@@ -288,6 +288,8 @@ require("lazy").setup({
   {import = "config.mason-lsp"},
   {import = "config.comment"},
   {import = "config.comma"},
+  {import = "config.code_runner"},
+  {import = "config.flash"},
 },
 {
     rocks = {

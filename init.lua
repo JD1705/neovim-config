@@ -42,7 +42,7 @@ keymap("n", "<Leader>e", ":NvimTreeToggle<CR>", { desc = "Toggle file explorer" 
 keymap("n", "<Leader>E", ":NvimTreeFocus<CR>", { desc = "Focus file explorer" })   -- Enfocar el explorador
 
 -- shortcut to activate/toggle Trouble with space+t
-keymap("n", "<Leader>t", ":Trouble<CR>")
+keymap("n", "<Leader>tt", ":Trouble<CR>")
 
 -- toggle commas and semmicolons
 keymap('n','<leader>,', ':CommaToggle<CR>')
@@ -114,7 +114,6 @@ require("lazy").setup({
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
     vim.api.nvim_set_hl(0, "LineNr", { fg = "#5C97f1", bg = "none" })
- 
 -- Aplicar transparencia globalmente
     vim.cmd([[
         " Fondos transparentes generales
@@ -151,129 +150,29 @@ require("lazy").setup({
 
         " Línea de separación
         highlight WinSeparator guibg=NONE
+
+        highlight DiagnosticVirtualTextError guibg=NONE
+        highlight DiagnosticVirtualTextWarn guibg=NONE
+        highlight DiagnosticVirtualTextInfo guibg=NONE
+        highlight DiagnosticVirtualTextHint guibg=NONE
         ]])
 
   end,
   },
   -- Configurador de LSP  
   { "neovim/nvim-lspconfig" },
-  -- Autocompletado
-  {
-  -- Autocompletado principal
-    {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-cmdline",
-      "hrsh7th/cmp-nvim-lsp",       -- Fuente de autocompletado del LSP (Pyright, etc.)
-      "hrsh7th/cmp-buffer",          -- Autocompletado del texto en buffers abiertos
-      "hrsh7th/cmp-path",            -- Autocompletado para rutas de archivos
-      "saadparwaiz1/cmp_luasnip",    -- Integración con snippets (LuaSnip)
-      "L3MON4D3/LuaSnip",            -- Motor de snippets (obligatorio)
-      "rafamadriz/friendly-snippets", -- Snippets predefinidos (como los de VSCode)
-    },
-    config = function()
-      -- Configuración de nvim-cmp (la veremos abajo)
-      require("config.cmp")
-    end,
-    },
-  },
-  {
-  "windwp/nvim-autopairs",
-  event = "InsertEnter",  -- Se carga al entrar en modo inserción
-  config = true,          -- Configuración automática con valores por defecto
-  },
-  -- Treesitter
-  {
-  "nvim-treesitter/nvim-treesitter",
-  run = ":TSUpdate",
-  config = function()
-    require("nvim-treesitter.configs").setup({
-      ensure_installed = { "python", "bash", "regex", "vim" },
-      highlight = { enable = true },
-    })
-  end,
-  },
-  -- Telescope
-  {
-    'nvim-telescope/telescope.nvim',
-    tag = '0.1.8',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-  },
-  {
-    "nvim-tree/nvim-tree.lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" }, -- Opcional: para iconos bonitos
-    config = function()
-      require("nvim-tree").setup({
-        -- Configuración básica (opcional)
-        git = {
-            enable = true,
-            ignore = false, -- ¡Esto es crucial! Evita que nvim-tree ignore los archivos listados en .gitignore
-        },
-        filters = {
-            dotfiles = false, -- Esto asegura que los archivos dotfiles (como .env) se muestren
-            custom = { },     -- Puedes agregar patrones personalizados aquí si quieres ocultar otros archivos
-        },
-        update_focused_file = {
-          enable = true,
-          update_root = true -- ¡Esta es la opción clave!
-        },
-        view = {
-          width = 30, -- Ancho de la barra lateral
-        },
-      })
-    end,
-  },
-  {
-    "averms/black-nvim",
-    ft = "python",
-    config = function()
-      -- Configuración mínima (sin módulo 'black')
-      vim.api.nvim_create_user_command("Black", function()
-        vim.cmd("!black " .. vim.fn.expand("%"))
-      end, {})
-    end,
-  },
+  {import = "config.cmp"},
+  {import = "config.autopairs"},
+  {import = "config.treesiter"},
+  {import = "config.telescope"},
+  {import = "config.nvim_tree"},
+  {import = "config.black"},
   { import = "config.dap" },
   { import = "config.neotest" },
-  {
-  "folke/trouble.nvim",
-  config = function()
-    require("trouble").setup()
-    vim.keymap.set("n", "<leader>tt", ":TroubleToggle<CR>")
-  end,
-  },
-  { "tpope/vim-fugitive", cmd = { "G", "Git" } },
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
-    ---@module "ibl"
-    ---@type ibl.config
-    opts = {},
-  },
-  {
-  "lewis6991/gitsigns.nvim",
-  event = "BufReadPre",
-  opts = {
-    signs = {
-      add = { text = "+" },
-      change = { text = "~" },
-      },
-    },
-  },
-  {
-'romgrk/barbar.nvim',
-    dependencies = {
-        'lewis6991/gitsigns.nvim',
-        'nvim-tree/nvim-web-devicons',
-    },
-    init = function() vim.g.barbar_auto_setup = false end,
-    opts = {
-        animation = true,
-        insert_at_start = true,
-        auto_hide = true,
-    },
-    version = '^1.0.0',
-  },
+  {import = "config.fugitive"},
+  {import = "config.indent"},
+  {import = "config.gitsigns"},
+  {import = "config.barbar"},
   {import = "config.notify"},
   {import = "config.noice"},
   {import = "config.hop"},
@@ -289,13 +188,32 @@ require("lazy").setup({
   {import = "config.comment"},
   {import = "config.comma"},
   {import = "config.code_runner"},
-  {import = "config.flash"},
+  -- {import = "config.flash"},
+  {import = "config.trouble"}
 },
 {
     rocks = {
         hererocks = true, -- Desactiva completamente el soporte de rocks de lazy.nvim
   },
 })
+
+-- Función para alternar el texto virtual de diagnósticos
+local function toggle_virtual_text()
+  local current_config = vim.diagnostic.config()
+  local new_virtual_text = not current_config.virtual_text
+  vim.diagnostic.config({
+    virtual_text = new_virtual_text
+  })
+  if new_virtual_text then
+    vim.notify("Diagnóstico virtual: ACTIVADO", vim.log.levels.INFO)
+  else
+    vim.notify("Diagnóstico virtual: DESACTIVADO", vim.log.levels.WARN)
+  end
+end
+
+-- Keybinding para alternar (por ejemplo, <leader>tv)
+vim.keymap.set('n', '<leader>d', toggle_virtual_text, { desc = 'Toggle virtual text' })
+
 
 local map = vim.keymap.set
 map('n', '<S-Tab>', '<Cmd>BufferPrevious<CR>')
@@ -314,5 +232,5 @@ vim.keymap.set("n", "<leader>dr", function() require("dap").repl.open() end, { d
 
 require("config.lsp")
 
-vim.lsp.enable('lua_ls')
-vim.lsp.enable('pyright')
+vim.lsp.enable("lua_ls")
+vim.lsp.enable("pyright")

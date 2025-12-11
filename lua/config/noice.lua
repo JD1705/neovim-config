@@ -25,12 +25,11 @@ return {
           inc_rename = false, -- enables an input dialog for inc-rename.nvim
           lsp_doc_border = false, -- add a border to hover docs and signature help
         },
-        
         cmdline = {
             enabled = true, -- enables the Noice cmdline UI
             view = "cmdline_popup", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
             opts = {}, -- global options for the cmdline. See section on views
-            ---@type table<string, CmdlineFormat>
+            -- @type table<string, CmdlineFormat>
             format = {
             -- conceal: (default=true) This will hide the text in the cmdline that matches the pattern.
             -- view: (default is cmdline view)
@@ -47,16 +46,15 @@ return {
             -- lua = false, -- to disable a format, set to `false`
             },
         },
-        
   -- default options for require('noice').redirect
   -- see the section on Command Redirection
-  ---@type NoiceRouteConfig
+  -- @type NoiceRouteConfig
     redirect = {
         view = "popup",
         filter = { event = "msg_show" },
     },
   -- You can add any custom commands below that will be available with `:Noice command`
-  ---@type table<string, NoiceCommand>
+  -- @type table<string, NoiceCommand>
     commands = {
         history = {
       -- options for the message history that you get with `:Noice`
@@ -109,7 +107,7 @@ return {
             enabled = true, -- enables the Noice popupmenu UI
             ---@type 'nui'|'cmp'
             backend = "nui", -- backend to use to show regular cmdline completions
-            ---@type NoicePopupmenuItemKind|false
+            -- @type NoicePopupmenuItemKind|false
             -- Icons for completion item kinds (see defaults at noice.config.icons.kinds)
             kind_icons = true, -- set to `false` to disable icons
             },

@@ -10,7 +10,6 @@ return {
     },
     config = function()
       local dap = require("dap")
-      
       -- Configuración del adaptador para Python
       dap.adapters.python = {
         type = "executable",
@@ -43,14 +42,12 @@ return {
       -- Ruta al debugpy instalado via Mason
       local mason_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
       local debugpy_path = mason_path
-      
       -- Verificar si existe la instalación de Mason, sino usar python del sistema
       if vim.fn.filereadable(mason_path) == 1 then
         debugpy_path = mason_path
       else
         debugpy_path = "python3"
       end
-      
       require("dap-python").setup(debugpy_path)
     end,
   },

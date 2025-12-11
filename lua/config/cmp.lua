@@ -1,31 +1,20 @@
-local cmp = require("cmp")
-
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      require("luasnip").lsp_expand(args.body) -- Carga snippets
+  -- Autocompletado
+return {
+  -- Autocompletado principal
+    {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-cmdline",
+      "hrsh7th/cmp-nvim-lsp",       -- Fuente de autocompletado del LSP (Pyright, etc.)
+      "hrsh7th/cmp-buffer",          -- Autocompletado del texto en buffers abiertos
+      "hrsh7th/cmp-path",            -- Autocompletado para rutas de archivos
+      "saadparwaiz1/cmp_luasnip",    -- Integración con snippets (LuaSnip)
+      "L3MON4D3/LuaSnip",            -- Motor de snippets (obligatorio)
+      "rafamadriz/friendly-snippets", -- Snippets predefinidos (como los de VSCode)
+    },
+    config = function()
+      -- Configuración de nvim-cmp (la veremos abajo)
+      require("config.cmp_config")
     end,
-  },
-  mapping = cmp.mapping.preset.insert({
-    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-f>"] = cmp.mapping.scroll_docs(4),
-    ["<C-Space>"] = cmp.mapping.complete(), -- Mostrar autocompletado
-    ["<C-e>"] = cmp.mapping.abort(),        -- Cerrar autocompletado
-    ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Confirmar selección
-  }),
-  sources = cmp.config.sources({
-    { name = "nvim_lsp" },    -- LSP (Pyright, etc.)
-    { name = "luasnip" },     -- Snippets
-    { name = "buffer" },      -- Texto en buffers abiertos
-    { name = "path" },        -- Rutas de archivos
-  }),
-})
-
--- Usa Tab/S-Tab para navegar entre sugerencias
-local cmp = require("cmp")
-cmp.setup({
-  mapping = cmp.mapping.preset.insert({
-    ["<Tab>"] = cmp.mapping.select_next_item(),
-    ["<S-Tab>"] = cmp.mapping.select_prev_item(),
-  }),
-})
+    },
+}

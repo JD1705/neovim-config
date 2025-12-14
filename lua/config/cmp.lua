@@ -11,6 +11,8 @@ return {
       "saadparwaiz1/cmp_luasnip",    -- Integración con snippets (LuaSnip)
       "L3MON4D3/LuaSnip",            -- Motor de snippets (obligatorio)
       "rafamadriz/friendly-snippets", -- Snippets predefinidos (como los de VSCode)
+      "lukas-reineke/cmp-under-comparator",
+      "hrsh7th/cmp-nvim-lsp-signature-help"
     },
     config = function()
       -- Configuración de nvim-cmp (la veremos abajo)

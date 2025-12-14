@@ -8,7 +8,7 @@ if not vim.loop.fs_stat(lazypath) then
     "https://github.com/folke/lazy.nvim.git",
     "--branch=stable",
     lazypath,
-  })
+ })
 end
 vim.opt.rtp:prepend(lazypath)
 vim.opt.termguicolors = true
@@ -28,7 +28,6 @@ vim.g.mapleader = " "
 local keymap = vim.keymap.set
 keymap("n", "<Leader>w", ":w<CR>")
 keymap("n", "<Leader>q", ":q<CR>")
-keymap("n", "<F5>", ":!python3 %<CR>")
 
 keymap("n", "<leader>b", ":Black<CR>")
 
@@ -51,16 +50,13 @@ keymap('n','<leader>;', ':SemiToggle<CR>')
 -- hop keymaps
 vim.api.nvim_set_keymap("n", "s", ":HopWord<CR>", { silent = true })
 vim.api.nvim_set_keymap("n", "S", ":HopLine<CR>", { silent = true })
--- vim.api.nvim_set_keymap("n", "f", ":HopChar1<CR>", { silent = true })
+vim.api.nvim_set_keymap("n", "f", ":HopChar1<CR>", { silent = true })
 
 -- A set of options for better completion experience. See `:h completeopt`
 vim.opt.completeopt = { "menuone", "noselect", "noinsert" }
 
 -- Hides the ins-completion-menu messages. See `:h shm-c`
 vim.opt.shortmess:append "c"
-
--- lsp pyright enabling
-vim.lsp.enable("pyright")
 
 -- 5. Carga de plugins (al final)
 require("lazy").setup({
@@ -114,7 +110,7 @@ require("lazy").setup({
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
     vim.api.nvim_set_hl(0, "LineNr", { fg = "#5C97f1", bg = "none" })
--- Aplicar transparencia globalmente
+  -- Aplicar transparencia globalmente
     vim.cmd([[
         " Fondos transparentes generales
         highlight Normal guibg=NONE
@@ -154,10 +150,26 @@ require("lazy").setup({
         highlight DiagnosticVirtualTextError guibg=NONE
         highlight DiagnosticVirtualTextWarn guibg=NONE
         highlight DiagnosticVirtualTextInfo guibg=NONE
-        highlight DiagnosticVirtualTextHint guibg=NONE
-        ]])
+        highlight DiagnosticVirtualTextHint guibg=none
 
-  end,
+        highlight Pmenu guibg=NONE
+        highlight PmenuSel guibg=NONE
+        highlight PmenuSbar guibg=NONE
+        highlight PmenuShadow guibg=NONE
+        highlight PmenuThumb guibg=NONE
+        highlight PmenuBorder guibg=NONE
+        highlight FloatBorder guibg=NONE
+
+        highlight CmpPmenu guibg=NONE
+        highlight CmpPmenuBorder guibg=NONE
+        highlight CmpPmenuSel guibg=NONE
+        highlight CmpItemAbbrMatch guibg=none
+        highlight CmpItemMenu guibg=none
+        highlight CmpItemAbbr guibg=none
+        highlight CmpItemAbbrMatchFuzzy guibg=none
+        highlight CmpItemKind guibg=none
+        ]])
+    end,
   },
   -- Configurador de LSP  
   { "neovim/nvim-lspconfig" },
@@ -189,13 +201,31 @@ require("lazy").setup({
   {import = "config.comma"},
   {import = "config.code_runner"},
   -- {import = "config.flash"},
-  {import = "config.trouble"}
+  {import = "config.trouble"},
+  {import = "config.kind"},
+  {import = "config.f_snippets"},
+  {import = "config.snippets"},
+  {import = "config.search"},
+  {import = "config.discord"},
+  {import = "config.triforce"},
+  {'nguyenvukhang/nvim-toggler'}
 },
 {
     rocks = {
         hererocks = true, -- Desactiva completamente el soporte de rocks de lazy.nvim
   },
 })
+
+-- Agrega esto en tu init.lua DESPUÉS de cargar cmp
+vim.api.nvim_set_hl(0, "Pmenu", { bg = "#000000", fg = "#c0caf5" })
+vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#000000", fg = "#c0caf5", bold = true })
+vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "#000000" })
+vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#000000" })
+vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { fg = "#7aa2f7", bold = true })
+vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { fg = "#7aa2f7", bold = true })
+vim.api.nvim_set_hl(0, "CmpItemKind", { fg = "#bb9af7" })
+vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#737aa2", italic = true })
+
 
 -- Función para alternar el texto virtual de diagnósticos
 local function toggle_virtual_text()
@@ -205,9 +235,9 @@ local function toggle_virtual_text()
     virtual_text = new_virtual_text
   })
   if new_virtual_text then
-    vim.notify("Diagnóstico virtual: ACTIVADO", vim.log.levels.INFO)
+    vim.notify("Virtual Diagnostic: ACTIVATED", vim.log.levels.INFO)
   else
-    vim.notify("Diagnóstico virtual: DESACTIVADO", vim.log.levels.WARN)
+    vim.notify("Virtual Diagnostic: DEACTIVATED", vim.log.levels.WARN)
   end
 end
 
@@ -230,7 +260,22 @@ vim.keymap.set("n", "<leader>du", function() require("dap").step_out() end, { de
 vim.keymap.set("n", "<leader>dt", function() require("dap").terminate() end, { desc = "Terminate Debug" })
 vim.keymap.set("n", "<leader>dr", function() require("dap").repl.open() end, { desc = "Open REPL" })
 
-require("config.lsp")
+-- require("lsp.lua_lsp").setup({
+--     settings = {
+--         Lua = {
+--             diagnostics = {
+--                 globals = "vim"
+--             },
+--         },
+--     },
+-- })
+--
+-- En tu init.lua, con autocmd
 
-vim.lsp.enable("lua_ls")
-vim.lsp.enable("pyright")
+-- require("lsp.init")
+require('nvim-toggler').setup()
+require'cmp'.setup {
+  sources = {
+    { name = 'nvim_lsp_signature_help' }
+  }
+}

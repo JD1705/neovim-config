@@ -9,28 +9,32 @@ return {
       "nvim-neotest/nvim-nio"
     },
     config = function()
-      local dap = require("dap")
-      -- Configuración del adaptador para Python
-      dap.adapters.python = {
-        type = "executable",
-        command = "python3",
-        args = { "-m", "debugpy.adapter" }
-      }
-
-      -- Configuración para Python
-      dap.configurations.python = {
-        {
-          type = "python",
-          request = "launch",
-          name = "Debug Python File",
-          program = "${file}",
-          pythonPath = function()
-            return "python3"
-          end,
-          console = "integratedTerminal",
-          justMyCode = true, -- Para depurar también librerías externas
-        },
-      }
+        local dap = require('dap')
+dap.adapters.python3 = function(cb, config)
+  if config.request == 'attach' then
+    -- @diagnostic disable-next-line: undefined-field
+    local port = (config.connect or config).port
+    -- @diagnostic disable-next-line: undefined-field
+    local host = (config.connect or config).host or '127.0.0.1'
+    cb({
+      type = 'server',
+      port = assert(port, '`connect.port` is required for a python `attach` configuration'),
+      host = host,
+      options = {
+        source_filetype = 'python',
+      },
+    })
+  else
+    cb({
+      type = 'executable',
+      command = "/mason/packages/debugpy/venv/bin/python3",
+      args = { '-m', 'debugpy.adapter' },
+      options = {
+        source_filetype = 'python',
+      },
+    })
+  end
+end
     end,
   },
 
@@ -40,7 +44,7 @@ return {
     ft = "python3",
     config = function()
       -- Ruta al debugpy instalado via Mason
-      local mason_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
+      local mason_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python3"
       local debugpy_path = mason_path
       -- Verificar si existe la instalación de Mason, sino usar python del sistema
       if vim.fn.filereadable(mason_path) == 1 then
@@ -96,6 +100,5 @@ return {
     "theHamsta/nvim-dap-virtual-text",
     dependencies = { "mfussenegger/nvim-dap" },
     config = true,
-  },
-}
-
+    },
+  }

@@ -18,6 +18,7 @@ vim.api.nvim_create_autocmd('FileType', {
             vim.lsp.enable('basedpyright')
             require("lsp.ruff")
             vim.lsp.enable('ruff')
+            print('✅ Python LSP configurado: basedpyright (type checking) + ruff (linting/formating)')
         end, 50)
     end,
 })

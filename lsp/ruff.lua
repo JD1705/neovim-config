@@ -10,6 +10,7 @@ vim.lsp.config('ruff', {
     init_options = {
         settings = {
             -- Habilitar todas las funciones de Ruff
+            configuration = "~/.config/nvim/lsp/ruff.lua",
             lint = { enable = true },
             fixAll = { enable = true },
             organizeImports = { enable = true },
@@ -53,15 +54,15 @@ vim.lsp.config('ruff', {
         end, { buffer = bufnr, desc = 'For[M]at with Ruff' })
 
         -- Formatear automáticamente al guardar (opcional)
-        vim.api.nvim_create_autocmd('BufWritePre', {
-            buffer = bufnr,
-            callback = function()
-                vim.lsp.buf.format({
-                    async = false,
-                    filter = function(c) return c.name == 'ruff' end
-                })
-            end,
-        })
+        -- vim.api.nvim_create_autocmd('BufWritePre', {
+        --     buffer = bufnr,
+        --     callback = function()
+        --         vim.lsp.buf.format({
+        --             async = false,
+        --             filter = function(c) return c.name == 'ruff' end
+        --         })
+        --     end,
+        -- })
 
         -- Diagnostic navigation
         vim.keymap.set('n', '[d', function() vim.diagnostic.jump({count=-1, float=true}) end, { buffer = bufnr, desc = 'Previous diagnostic' })
@@ -70,5 +71,3 @@ vim.lsp.config('ruff', {
         vim.keymap.set('n', '<leader>dd', vim.diagnostic.open_float, { buffer = bufnr })
     end,
 })
-
-print('✅ Python LSP configurado: basedpyright (type checking) + ruff (linting/formating)')

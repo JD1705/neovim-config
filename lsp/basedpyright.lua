@@ -228,6 +228,7 @@ vim.lsp.config('basedpyright', {
         -- OPTIMIZACIÓN CLAVE
         -- ====================
     settings = {
+        configuration = "~/.config/nvim/lsp/basedpyright.lua",
         basedpyright = {
             analysis = {
                 typeCheckingMode = 'basic', -- 'off', 'basic', 'strict'

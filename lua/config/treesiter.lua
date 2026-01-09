@@ -4,7 +4,7 @@ return {
   run = ":TSUpdate",
   config = function()
     require("nvim-treesitter.configs").setup({
-      ensure_installed = { "python", "bash", "regex", "vim" },
+      ensure_installed = { "python", "bash", "regex", "vim", "http" },
       highlight = { enable = true },
     })
   end,

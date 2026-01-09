@@ -208,7 +208,8 @@ require("lazy").setup({
   {import = "config.search"},
   {import = "config.discord"},
   {import = "config.triforce"},
-  {'nguyenvukhang/nvim-toggler'}
+  {'nguyenvukhang/nvim-toggler'},
+  {import = "config.resty"}
 },
 {
     rocks = {
@@ -259,6 +260,11 @@ vim.keymap.set("n", "<leader>di", function() require("dap").step_into() end, { d
 vim.keymap.set("n", "<leader>du", function() require("dap").step_out() end, { desc = "Step Out" })
 vim.keymap.set("n", "<leader>dt", function() require("dap").terminate() end, { desc = "Terminate Debug" })
 vim.keymap.set("n", "<leader>dr", function() require("dap").repl.open() end, { desc = "Open REPL" })
+
+-- resty shortcuts
+vim.keymap.set("n", "<leader>hr", ":hor Rest run<CR>", { desc = "rest run [H]ttp [R]equest" })
+vim.keymap.set("n", "<leader>hl", ":hor Rest last<CR>", { desc= "rest run [H]ttp [L]ast request" })
+vim.keymap.set("n", "<leader>ho", ":hor Rest open<CR>", { desc= "rest [O]pen [H]ttp panel" })
 
 -- require("lsp.lua_lsp").setup({
 --     settings = {

@@ -2,6 +2,10 @@ return {
     "williamboman/mason.nvim",
     lazy = false,
     config = function()
-        require("mason").setup()
+        require("mason").setup({
+            ensure_installed = {
+                "debugpy",
+            },
+        })
     end,
 }

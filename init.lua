@@ -212,7 +212,8 @@ require("lazy").setup({
   {import = "config.discord"},
   {import = "config.triforce"},
   {'nguyenvukhang/nvim-toggler'},
-  {import = "config.resty"}
+  {import = "config.resty"},
+  {import = "config.cheatsheet"}
 },
 {
     rocks = {

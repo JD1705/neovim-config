@@ -43,7 +43,7 @@ return {
         neotest.run.run()
       end, { desc = "Run test" })
 
-      vim.keymap.set("n", "<leader>rf", function()
+      vim.keymap.set("n", "<leader>tf", function()
         neotest.run.run(vim.fn.expand("%"))
       end, { desc = "Run test file" })
 

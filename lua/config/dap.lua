@@ -9,50 +9,63 @@ return {
       "nvim-neotest/nvim-nio"
     },
     config = function()
-        local dap = require('dap')
-dap.adapters.python3 = function(cb, config)
-  if config.request == 'attach' then
-    -- @diagnostic disable-next-line: undefined-field
-    local port = (config.connect or config).port
-    -- @diagnostic disable-next-line: undefined-field
-    local host = (config.connect or config).host or '127.0.0.1'
-    cb({
-      type = 'server',
-      port = assert(port, '`connect.port` is required for a python `attach` configuration'),
-      host = host,
-      options = {
-        source_filetype = 'python',
-      },
-    })
-  else
-    cb({
-      type = 'executable',
-      command = "/mason/packages/debugpy/venv/bin/python3",
-      args = { '-m', 'debugpy.adapter' },
-      options = {
-        source_filetype = 'python',
-      },
-    })
-  end
-end
+      local dap = require('dap')
+      dap.configurations.python = {
+        {
+          type = 'python',
+          request = 'launch',
+          name = "Launch file (Integrated Terminal)",
+          program = "${file}",
+          pythonPath = function()
+            -- Dynamically find the path to the debugpy adapter installed with mason
+            local mason_path = vim.fn.stdpath("data") .. "/mason/"
+            local debugpy_venv_python = mason_path .. "packages/debugpy/venv/bin/python"
+
+            if vim.fn.filereadable(debugpy_venv_python) == 1 then
+              return debugpy_venv_python
+            else
+              -- Fallback to system python/python3 if debugpy venv python is not found
+              local python_path = vim.fn.exepath('python')
+              if python_path ~= '' then
+                return python_path
+              else
+                return vim.fn.exepath('python3') -- Try python3 if 'python' isn't found
+              end
+            end
+          end,
+          console = 'internalConsole', -- CRITICAL: Direct output to dap-ui REPL
+        },
+        {
+          type = 'python',
+          request = 'attach',
+          name = "Attach to process",
+          port = 5678, -- Default debugpy port
+          host = '127.0.0.1',
+          pythonPath = function()
+            return vim.fn.exepath('python')
+          end,
+        },
+      }
     end,
   },
 
   -- Integración específica para Python
   {
     "mfussenegger/nvim-dap-python",
-    ft = "python3",
+    ft = "python", -- CRITICAL FIX: The filetype is 'python', not 'python3'
     config = function()
-      -- Ruta al debugpy instalado via Mason
-      local mason_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python3"
-      local debugpy_path = mason_path
-      -- Verificar si existe la instalación de Mason, sino usar python del sistema
-      if vim.fn.filereadable(mason_path) == 1 then
-        debugpy_path = mason_path
+      -- Dynamically find the path to the debugpy adapter installed with mason
+      local mason_path = vim.fn.stdpath("data") .. "/mason/"
+      local adapter_path = mason_path .. "packages/debugpy/venv/bin/python"
+
+      -- Check if the adapter exists and configure dap-python
+      if vim.fn.filereadable(adapter_path) == 1 then
+        require("dap-python").setup(adapter_path)
       else
-        debugpy_path = "python3"
+        -- Fallback if debugpy is not found in mason
+        require("dap-python").setup()
+        vim.notify("DAP: debugpy not found in Mason. Using system python.", vim.log.levels.WARN)
       end
-      require("dap-python").setup(debugpy_path)
     end,
   },
 
@@ -82,15 +95,20 @@ end
         },
       })
 
-      -- Automatizar apertura/cierre de la UI
+      -- Automatically open/close the UI when a debug session starts/stops
       dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open()
       end
-      dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close()
-      end
-      dap.listeners.before.event_exited["dapui_config"] = function()
-        dapui.close()
+      -- dap.listeners.before.event_terminated["dapui_config"] = function()
+      --   dapui.close()
+      -- end
+      -- dap.listeners.before.event_exited["dapui_config"] = function()
+      --   dapui.close()
+      -- end
+
+      -- CRITICAL: Ensure UI updates and REPL focuses when debugger stops (e.g., on error)
+      dap.listeners.after.event_stopped["dapui_config_stopped"] = function()
+        dapui.eval() -- Ensure all UI elements are updated
       end
     end,
   },

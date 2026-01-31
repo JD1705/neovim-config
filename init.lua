@@ -58,6 +58,9 @@ vim.opt.completeopt = { "menuone", "noselect", "noinsert" }
 -- Hides the ins-completion-menu messages. See `:h shm-c`
 vim.opt.shortmess:append "c"
 
+-- Cargar configuración de UI (diagnósticos) antes de los plugins
+require("config.diagnostics")
+
 -- 5. Carga de plugins (al final)
 require("lazy").setup({
   -- Tema Kanagawa
@@ -185,7 +188,7 @@ require("lazy").setup({
   {import = "config.indent"},
   {import = "config.gitsigns"},
   {import = "config.barbar"},
-  {import = "config.notify"},
+  -- {import = "config.notify"},
   {import = "config.noice"},
   {import = "config.hop"},
   {import = "config.lualine"},
@@ -260,6 +263,9 @@ vim.keymap.set("n", "<leader>di", function() require("dap").step_into() end, { d
 vim.keymap.set("n", "<leader>du", function() require("dap").step_out() end, { desc = "Step Out" })
 vim.keymap.set("n", "<leader>dt", function() require("dap").terminate() end, { desc = "Terminate Debug" })
 vim.keymap.set("n", "<leader>dr", function() require("dap").repl.open() end, { desc = "Open REPL" })
+-- Keymaps for dap-ui
+vim.keymap.set("n", "<leader>du", function() require("dapui").toggle() end, { desc = "Toggle DAP UI" })
+vim.keymap.set("n", "<leader>dq", function() require("dapui").quit() end, { desc = "Quit DAP UI" })
 
 -- resty shortcuts
 vim.keymap.set("n", "<leader>hr", ":hor Rest run<CR>", { desc = "rest run [H]ttp [R]equest" })
@@ -280,8 +286,3 @@ vim.keymap.set("n", "<leader>ho", ":hor Rest open<CR>", { desc= "rest [O]pen [H]
 
 -- require("lsp.init")
 require('nvim-toggler').setup()
-require'cmp'.setup {
-  sources = {
-    { name = 'nvim_lsp_signature_help' }
-  }
-}
